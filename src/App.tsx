@@ -52,10 +52,38 @@ const posts = [
 export default function App() {
   const [activeSection, setActiveSection] = useState<'feed' | 'apply' | 'postDetail'>('feed');
   const [selectedPost, setSelectedPost] = useState<typeof posts[0] | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   const viewPost = (post: typeof posts[0]) => {
     setSelectedPost(post);
     setActiveSection('postDetail');
+  };
+
+  const handleApply = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setStatusMessage(null);
+
+    // Simulate API call
+    try {
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Simulate some failures occasionally
+          if (Math.random() < 0.3) {
+            reject(new Error('Failed to submit application. Please try again.'));
+          } else {
+            resolve(true);
+          }
+        }, 1500);
+      });
+      setStatusMessage({ text: 'Application submitted successfully!', type: 'success' });
+      (e.target as HTMLFormElement).reset();
+    } catch (err: any) {
+      setStatusMessage({ text: err.message, type: 'error' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleShare = async () => {
@@ -144,12 +172,17 @@ export default function App() {
             </button>
             <h2 className="text-4xl font-black uppercase tracking-tighter mb-6">Apply Now</h2>
             <p className="text-gray-400 mb-8 font-bold">Fill the form below, and our experts will contact you soon.</p>
-            <form className="space-y-6">
-              <input type="text" placeholder="Your Name" className="w-full bg-[#333] p-4 text-white placeholder-gray-500 outline-none focus:ring-1 focus:ring-[#E2FF00]" />
-              <input type="email" placeholder="Your Email" className="w-full bg-[#333] p-4 text-white placeholder-gray-500 outline-none focus:ring-1 focus:ring-[#E2FF00]" />
-              <textarea placeholder="Your Goals & Fitness Level" className="w-full bg-[#333] p-4 text-white placeholder-gray-500 outline-none focus:ring-1 focus:ring-[#E2FF00] h-32"></textarea>
-              <button className="w-full bg-[#E2FF00] text-black py-4 rounded-full font-black uppercase tracking-widest hover:bg-white transition">
-                Submit Application
+            <form onSubmit={handleApply} className="space-y-6">
+              <input type="text" placeholder="Your Name" required className="w-full bg-[#333] p-4 text-white placeholder-gray-500 outline-none focus:ring-1 focus:ring-[#E2FF00]" />
+              <input type="email" placeholder="Your Email" required className="w-full bg-[#333] p-4 text-white placeholder-gray-500 outline-none focus:ring-1 focus:ring-[#E2FF00]" />
+              <textarea placeholder="Your Goals & Fitness Level" required className="w-full bg-[#333] p-4 text-white placeholder-gray-500 outline-none focus:ring-1 focus:ring-[#E2FF00] h-32"></textarea>
+              {statusMessage && (
+                <div className={cn("p-4 rounded-full text-center font-bold", statusMessage.type === 'success' ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400")}>
+                  {statusMessage.text}
+                </div>
+              )}
+              <button disabled={isSubmitting} className="w-full bg-[#E2FF00] text-black py-4 rounded-full font-black uppercase tracking-widest hover:bg-white transition disabled:opacity-50">
+                {isSubmitting ? 'Submitting...' : 'Submit Application'}
               </button>
             </form>
           </motion.div>
