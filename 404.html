@@ -2,8 +2,8 @@
 <html>
   <head>
     <script>
-      sessionStorage.redirect = location.href;
-      location.replace(location.pathname.split('/').slice(0, 1 + location.pathname.split('/').indexOf(location.pathname.split('/')[1])).join('/') + "/");
+      // Redirect to the repository root directory
+      window.location.href = window.location.origin + window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1) + 1);
     </script>
   </head>
 </html>
