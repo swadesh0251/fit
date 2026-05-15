@@ -1,0 +1,8 @@
+{
+  "name": "FitPulse Gym",
+  "description": "A fitness platform for reading expert workout tips and applying for personal fitness plans.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
