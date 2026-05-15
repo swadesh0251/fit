@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      sessionStorage.redirect = location.href;
+      location.replace(location.pathname.split('/').slice(0, 1 + location.pathname.split('/').indexOf(location.pathname.split('/')[1])).join('/') + "/");
+    </script>
+  </head>
+</html>
