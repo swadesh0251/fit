@@ -16,11 +16,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Build and Deploy
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.name $GITHUB_ACTOR
-          git config --global user.email $GITHUB_ACTOR@users.noreply.github.com
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           npm run deploy
